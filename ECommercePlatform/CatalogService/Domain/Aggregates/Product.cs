@@ -10,8 +10,10 @@ namespace CatalogService.Domain.Aggregates
         public Money Price { get; private set; }
         public Guid CategoryId { get; private set; }
         public ProductStatus Status { get; private set; }
+        public string? Description { get; private set; }
+        public DateTime CreatedAt { get; private set; }
 
-        public static Product Create(ProductName name, Money price, Guid categoryId)
+        public static Product Create(ProductName name, Money price, Guid categoryId, string? description = null)
         {
             Product product = new()
             {
@@ -19,12 +21,21 @@ namespace CatalogService.Domain.Aggregates
                 Name = name,
                 Price = price,
                 CategoryId = categoryId,
-                Status = ProductStatus.Active
+                Status = ProductStatus.Active,
+                Description = description,
+                CreatedAt = DateTime.UtcNow
             };
 
             product.AddDomainEvent(new ProductCreatedDomainEvent(product.Id));
 
             return product;
+        }
+
+        public void AddProductVariant()
+        {
+            if (Status == ProductStatus.Inactive)
+                throw new CatalogDomainException("Cannot add version to inactive product");
+            AddDomainEvent(new ProductVersionAddedDomainEvent(Id));
         }
 
         public void ChangePrice(Money newPrice)
