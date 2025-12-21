@@ -12,8 +12,9 @@ namespace CatalogService.Domain.Aggregates
         public ProductStatus Status { get; private set; }
         public string? Description { get; private set; }
         public DateTime CreatedAt { get; private set; }
+        public List<ProductVariant> Variants { get; private set; } = new();
 
-        public static Product Create(ProductName name, Money price, Guid categoryId, string? description = null)
+        public Product Create(ProductName name, Money price, Guid categoryId, string? description = null)
         {
             Product product = new()
             {
@@ -31,11 +32,14 @@ namespace CatalogService.Domain.Aggregates
             return product;
         }
 
-        public void AddProductVariant()
+        public void AddProductVariant(ProductVariant variant)
         {
             if (Status == ProductStatus.Inactive)
                 throw new CatalogDomainException("Cannot add version to inactive product");
-            AddDomainEvent(new ProductVersionAddedDomainEvent(Id));
+
+            Variants.Add(variant);
+
+            AddDomainEvent(new ProductCreatedDomainEvent(Id));
         }
 
         public void ChangePrice(Money newPrice)
