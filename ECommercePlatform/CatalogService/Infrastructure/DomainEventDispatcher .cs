@@ -2,7 +2,7 @@
 using CatalogService.Application;
 using CatalogService.Domain.Events;
 
-using MediatR;
+using MassTransit.Mediator;
 
 namespace CatalogService.Infrastructure
 {
