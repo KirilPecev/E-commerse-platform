@@ -49,5 +49,40 @@ namespace CatalogService.Controllers
 
             return Ok(response);
         }
+
+        [HttpGet]
+        public async Task<IActionResult> GetAll()
+        {
+            IEnumerable<ProductDto> results = await mediator.Send(new GetAllProductsQuery());
+
+            IEnumerable<ProductResponse> responses = results
+                .Select(result => new ProductResponse(
+                    result.Id,
+                    result.Name,
+                    result.Amount,
+                    result.Currency
+                ));
+
+            return Ok(responses);
+        }
+
+        [HttpPut("{id:guid}")]
+        public async Task<IActionResult> Update(Guid id, [FromBody] UpdateProductRequest request)
+        {
+            UpdateProductCommand command = new UpdateProductCommand(
+                id,
+                request.Name,
+                request.Amount,
+                request.Currency,
+                request.CategoryId,
+                request.Description);
+
+            await mediator.Send(command);
+
+            return CreatedAtAction(
+                nameof(GetById),
+                new { id },
+                new { Id = id });
+        }
     }
 }

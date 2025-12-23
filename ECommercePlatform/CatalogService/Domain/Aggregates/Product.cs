@@ -45,6 +45,18 @@ namespace CatalogService.Domain.Aggregates
             Price = newPrice;
         }
 
+        public void UpdateDetails(ProductName name, Guid categoryId, string? description)
+        {
+            if (Status == ProductStatus.Inactive)
+                throw new CatalogDomainException("Cannot update details of inactive product");
+
+            Name = name;
+            CategoryId = categoryId;
+            Description = description;
+
+            AddDomainEvent(new ProductUpdatedDomainEvent(Id));
+        }
+
         public void Deactivate()
         {
             if (Status == ProductStatus.Inactive) return;

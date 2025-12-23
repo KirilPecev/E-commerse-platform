@@ -1,0 +1,30 @@
+﻿using CatalogService.Application.Exceptions;
+using CatalogService.Domain.Aggregates;
+using CatalogService.Domain.ValueObjects;
+using CatalogService.Infrastructure.Persistence;
+
+using MediatR;
+
+using Microsoft.EntityFrameworkCore;
+
+namespace CatalogService.Application.Products.Commands
+{
+    public class UpdateProductCommandHandler
+        (CatalogDbContext dbContext) : IRequestHandler<UpdateProductCommand>
+    {
+        public async Task Handle(UpdateProductCommand request, CancellationToken cancellationToken)
+        {
+            Product? product = await dbContext
+                .Products
+                .FirstOrDefaultAsync(p => p.Id == request.Id, cancellationToken);
+
+            if (product is null)
+                throw new NotFoundException(nameof(Product), request.Id);
+
+            product.UpdateDetails(new ProductName(request.Name), request.CategoryId, request.Description);
+            product.ChangePrice(new Money(request.Amount, request.Currency));
+
+            await dbContext.SaveChangesAsync(cancellationToken);
+        }
+    }
+}
