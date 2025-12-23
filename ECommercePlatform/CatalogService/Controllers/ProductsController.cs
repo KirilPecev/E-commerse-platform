@@ -35,7 +35,7 @@ namespace CatalogService.Controllers
         [HttpGet("{id:guid}")]
         public async Task<IActionResult> GetById(Guid id)
         {
-            ProductDto result = await mediator.Send(new GetProductByIdQuery(id));
+            ProductDto? result = await mediator.Send(new GetProductByIdQuery(id));
 
             if (result is null)
                 return NotFound();
