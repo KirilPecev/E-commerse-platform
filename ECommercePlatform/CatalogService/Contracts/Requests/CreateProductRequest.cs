@@ -1,8 +1,9 @@
 ﻿namespace CatalogService.Contracts.Requests
 {
-    public class CreateProductRequest
-    {
-        public string Name { get; init; } = default!;
-        public decimal Price { get; init; }
-    }
+    public record CreateProductRequest(
+        string Name,
+        decimal Amount,
+        string Currency,
+        Guid CategoryId,
+        string? Description);
 }

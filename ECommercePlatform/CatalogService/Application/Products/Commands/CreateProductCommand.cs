@@ -4,5 +4,8 @@ namespace CatalogService.Application.Products.Commands
 {
     public record CreateProductCommand(
         string Name,
-        decimal Price) : IRequest<Guid>;
+        decimal Amount,
+        string Currency,
+        Guid CategoryId,
+        string? Description) : IRequest<Guid>;
 }

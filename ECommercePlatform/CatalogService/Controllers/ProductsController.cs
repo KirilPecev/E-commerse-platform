@@ -17,7 +17,10 @@ namespace CatalogService.Controllers
         {
             CreateProductCommand command = new CreateProductCommand(
                 request.Name,
-                request.Price);
+                request.Amount,
+                request.Currency,
+                request.CategoryId,
+                request.Description);
 
             Guid productId = await mediator.Send(command);
 
