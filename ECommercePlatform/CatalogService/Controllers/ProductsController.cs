@@ -84,5 +84,25 @@ namespace CatalogService.Controllers
                 new { id },
                 new { Id = id });
         }
+
+        [HttpDelete("{id:guid}")]
+        public async Task<IActionResult> Deactivate(Guid id)
+        {
+            DeactivateProductCommand command = new DeactivateProductCommand(id);
+
+            await mediator.Send(command);
+
+            return NoContent();
+        }
+
+        [HttpPost("{id:guid}/activate")]
+        public async Task<IActionResult> Activate(Guid id)
+        {
+            ActivateProductCommand command = new ActivateProductCommand(id);
+
+            await mediator.Send(command);
+
+            return NoContent();
+        }
     }
 }

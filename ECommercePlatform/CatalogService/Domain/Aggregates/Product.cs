@@ -30,7 +30,7 @@ namespace CatalogService.Domain.Aggregates
         public void AddProductVariant(ProductVariant variant)
         {
             if (Status == ProductStatus.Inactive)
-                throw new CatalogDomainException("Cannot add version to inactive product");
+                throw new CatalogDomainException("Cannot add variant to inactive product");
 
             Variants.Add(variant);
 
@@ -62,6 +62,13 @@ namespace CatalogService.Domain.Aggregates
             if (Status == ProductStatus.Inactive) return;
 
             Status = ProductStatus.Inactive;
+        }
+
+        public void Activate()
+        {
+            if (Status == ProductStatus.Active) return;
+
+            Status = ProductStatus.Active;
         }
     }
 }
