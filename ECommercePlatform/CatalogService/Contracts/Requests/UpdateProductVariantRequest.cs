@@ -1,0 +1,10 @@
+﻿namespace CatalogService.Contracts.Requests
+{
+    public record UpdateProductVariantRequest
+        (string Sku,
+         decimal Amount,
+         string Currency,
+         int StockQuantity,
+         string? Size,
+         string? Color);
+}

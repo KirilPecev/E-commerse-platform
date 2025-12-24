@@ -22,5 +22,21 @@ namespace CatalogService.Domain.Aggregates
             Color = color;
             StockQuantity = stockQuantity;
         }
+
+        public void UpdateDetails(string sku, string? size, string? color, int stockQuantity)
+        {
+            if (stockQuantity < 0)
+                throw new ArgumentException("Stock quantity cannot be negative", nameof(stockQuantity));
+
+            Sku = sku;
+            Size = size;
+            Color = color;
+            StockQuantity = stockQuantity;
+        }
+
+        public void ChangePrice(Money price)
+        {
+            Price = price;
+        }
     }
 }

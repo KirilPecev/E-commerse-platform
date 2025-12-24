@@ -3,8 +3,6 @@ using CatalogService.Application.Products.Queries;
 using CatalogService.Contracts.Requests;
 using CatalogService.Contracts.Responses;
 
-using MassTransit.Configuration;
-
 using MediatR;
 
 using Microsoft.AspNetCore.Mvc;
@@ -144,6 +142,37 @@ namespace CatalogService.Controllers
                 ));
 
             return Ok(responses);
+        }
+
+        [HttpDelete("{productId:guid}/variants/{variantId:guid}")]
+        public async Task<IActionResult> DeleteProductVariant(Guid productId, Guid variantId)
+        {
+            DeleteProductVariantCommand command = new DeleteProductVariantCommand(productId, variantId);
+
+            await mediator.Send(command);
+            
+            return NoContent();
+        }
+
+        [HttpPut("{productId:guid}/variants/{variantId:guid}")]
+        public async Task<IActionResult> UpdateProductVariant(Guid productId, Guid variantId, [FromBody] UpdateProductVariantRequest request)
+        {
+            UpdateProductVariantCommand command = new UpdateProductVariantCommand(
+                productId,
+                variantId,
+                request.Sku,
+                request.Amount,
+                request.Currency,
+                request.StockQuantity,
+                request.Size,
+                request.Color);
+
+            await mediator.Send(command);
+
+            return CreatedAtAction(
+                nameof(GetById),
+                new { id = productId },
+                new { Id = productId });
         }
     }
 }
