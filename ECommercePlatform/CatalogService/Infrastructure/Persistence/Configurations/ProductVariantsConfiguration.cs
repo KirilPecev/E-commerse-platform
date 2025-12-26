@@ -32,7 +32,7 @@ namespace CatalogService.Infrastructure.Persistence.Configurations
 
             builder.HasOne<Product>()
                    .WithMany(p => p.Variants)
-                   .HasForeignKey(p => p.ProductId)
+                   .HasForeignKey("ProductId")
                    .OnDelete(DeleteBehavior.NoAction);
         }
     }

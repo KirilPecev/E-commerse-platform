@@ -17,11 +17,6 @@ namespace CatalogService.Infrastructure.Persistence.Configurations
 
             builder.Property(c => c.Description)
                    .HasMaxLength(500);
-
-            builder.HasMany<Product>()
-                   .WithOne()
-                   .HasForeignKey(c => c.CategoryId)
-                   .OnDelete(DeleteBehavior.NoAction);
         }
     }
 }

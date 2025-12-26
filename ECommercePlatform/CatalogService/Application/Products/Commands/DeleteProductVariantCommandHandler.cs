@@ -14,7 +14,7 @@ namespace CatalogService.Application.Products.Commands
             await dbContext
                 .ProductVariants
                 .Where(p => p.Id == request.VariantId
-                         && p.ProductId == request.ProductId)
+                         && p.Product.Id == request.ProductId)
                 .ExecuteDeleteAsync(cancellationToken);
 
             await dbContext.SaveChangesAsync(cancellationToken);

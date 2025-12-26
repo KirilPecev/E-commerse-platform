@@ -8,18 +8,18 @@ namespace CatalogService.Domain.Aggregates
     {
         public ProductName Name { get; private set; }
         public Money Price { get; private set; }
-        public Guid CategoryId { get; private set; }
+        public Category Category { get; private set; }
         public ProductStatus Status { get; private set; }
         public string? Description { get; private set; }
         public DateTime CreatedAt { get; private set; }
         public List<ProductVariant> Variants { get; private set; } = new();
 
-        public Product(ProductName name, Money price, Guid categoryId, string? description = null)
+        public Product(ProductName name, Money price, Category category, string? description = null)
         {
             Id = Guid.NewGuid();
             Name = name;
             Price = price;
-            CategoryId = categoryId;
+            Category = category;
             Status = ProductStatus.Active;
             Description = description;
             CreatedAt = DateTime.UtcNow;
@@ -32,7 +32,7 @@ namespace CatalogService.Domain.Aggregates
             if (Status == ProductStatus.Inactive)
                 throw new CatalogDomainException("Cannot add variant to inactive product");
 
-            ProductVariant productVariant = new ProductVariant(Id, sku, new Money(amount, currency), size, color, stockQuantity);
+            ProductVariant productVariant = new ProductVariant(this, sku, new Money(amount, currency), size, color, stockQuantity);
 
             Variants.Add(productVariant);
 
@@ -49,13 +49,13 @@ namespace CatalogService.Domain.Aggregates
             Price = newPrice;
         }
 
-        public void UpdateDetails(ProductName name, Guid categoryId, string? description)
+        public void UpdateDetails(ProductName name, Category category, string? description)
         {
             if (Status == ProductStatus.Inactive)
                 throw new CatalogDomainException("Cannot update details of inactive product");
 
             Name = name;
-            CategoryId = categoryId;
+            Category = category;
             Description = description;
 
             AddDomainEvent(new ProductUpdatedDomainEvent(Id));

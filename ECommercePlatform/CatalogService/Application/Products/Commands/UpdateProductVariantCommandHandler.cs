@@ -17,7 +17,7 @@ namespace CatalogService.Application.Products.Commands
             ProductVariant? productVariant = await dbContext
                 .ProductVariants
                 .FirstOrDefaultAsync(p => p.Id == request.VariantId
-                                       && p.ProductId == request.ProductId, cancellationToken);
+                                       && p.Product.Id == request.ProductId, cancellationToken);
 
             if (productVariant is null)
                 throw new NotFoundException(nameof(Product), request.VariantId);

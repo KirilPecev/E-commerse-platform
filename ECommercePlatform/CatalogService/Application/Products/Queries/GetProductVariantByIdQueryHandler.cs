@@ -15,7 +15,7 @@ namespace CatalogService.Application.Products.Queries
                 .ProductVariants
                 .AsNoTracking()
                 .Where(p => p.Id == request.VariantId
-                         && p.ProductId == request.ProductId)
+                         && p.Product.Id == request.ProductId)
                 .Select(p => new ProductVariantDto(p.Id, p.Sku, p.Price.Amount, p.Price.Currency, p.Size, p.Color, p.StockQuantity))
                 .FirstOrDefaultAsync(cancellationToken);
     }

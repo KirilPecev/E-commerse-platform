@@ -27,9 +27,6 @@ namespace CatalogService.Infrastructure.Persistence.Configurations
                  .HasColumnName("Currency");
             });
 
-            builder.Property(p => p.CategoryId)
-                   .IsRequired();
-
             builder.Property(p => p.Status)
                    .HasConversion<string>();
 
@@ -40,12 +37,12 @@ namespace CatalogService.Infrastructure.Persistence.Configurations
 
             builder.HasOne<Category>()
                    .WithMany()
-                   .HasForeignKey(p => p.CategoryId)
+                   .HasForeignKey("CategoryId")
                    .IsRequired();
 
             builder.HasMany<ProductVariant>()
                    .WithOne()
-                   .HasForeignKey(v => v.ProductId)
+                   .HasForeignKey("ProductId")
                    .IsRequired();
         }
     }

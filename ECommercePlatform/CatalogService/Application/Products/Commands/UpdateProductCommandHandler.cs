@@ -14,14 +14,17 @@ namespace CatalogService.Application.Products.Commands
     {
         public async Task Handle(UpdateProductCommand request, CancellationToken cancellationToken)
         {
-            Product? product = await dbContext
+            Product product = await dbContext
                 .Products
-                .FirstOrDefaultAsync(p => p.Id == request.Id, cancellationToken);
+                .FirstOrDefaultAsync(p => p.Id == request.Id, cancellationToken)
+                ?? throw new NotFoundException(nameof(Product), request.Id);
 
-            if (product is null)
-                throw new NotFoundException(nameof(Product), request.Id);
+            Category category = await dbContext
+                .Categories
+                .FirstOrDefaultAsync(c => c.Id == request.CategoryId, cancellationToken)
+                ?? throw new NotFoundException(nameof(Category), request.Id);
 
-            product.UpdateDetails(new ProductName(request.Name), request.CategoryId, request.Description);
+            product.UpdateDetails(new ProductName(request.Name), category, request.Description);
             product.ChangePrice(new Money(request.Amount, request.Currency));
 
             await dbContext.SaveChangesAsync(cancellationToken);
