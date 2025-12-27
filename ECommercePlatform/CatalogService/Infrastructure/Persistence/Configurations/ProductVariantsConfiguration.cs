@@ -30,10 +30,10 @@ namespace CatalogService.Infrastructure.Persistence.Configurations
             builder.Property(p => p.StockQuantity)
                 .IsRequired();
 
-            builder.HasOne<Product>()
-                   .WithMany(p => p.Variants)
-                   .HasForeignKey("ProductId")
-                   .OnDelete(DeleteBehavior.NoAction);
+            //builder.HasOne<Product>()
+            //       .WithMany(p => p.Variants)
+            //       .HasForeignKey("ProductId")
+            //       .OnDelete(DeleteBehavior.NoAction);
         }
     }
 }

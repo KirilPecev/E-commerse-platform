@@ -17,7 +17,7 @@ namespace CatalogService.Infrastructure
             services
                 .AddDbContext<CatalogDbContext>(options =>
                     options.UseSqlServer(
-                        configuration.GetConnectionString("CatalogDatabase"),
+                        configuration.GetConnectionString("CatalogDb"),
                         sqlOptions => sqlOptions.MigrationsAssembly(typeof(CatalogDbContext).Assembly.FullName)));
 
             // Domain event dispatcher
