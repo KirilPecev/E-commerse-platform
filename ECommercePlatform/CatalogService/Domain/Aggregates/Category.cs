@@ -9,6 +9,12 @@ namespace CatalogService.Domain.Aggregates
         public string? Description { get; private set; }
         public List<Product> Products { get; private set; } = new();
 
+        // Initialize non-nullable properties with default! to satisfy CS8618 for EF Core or serialization
+        private Category()
+        {
+            Name = default!;
+        }
+
         public Category(Guid id, string name, string? description)
         {
             if (string.IsNullOrWhiteSpace(name))

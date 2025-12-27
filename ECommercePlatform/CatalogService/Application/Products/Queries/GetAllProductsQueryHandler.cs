@@ -1,8 +1,12 @@
 ﻿
 using CatalogService.Infrastructure.Persistence;
 
+using MassTransit.DependencyInjection;
+using MassTransit.Internals.GraphValidation;
+
 using MediatR;
 
+using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.EntityFrameworkCore;
 
 namespace CatalogService.Application.Products.Queries

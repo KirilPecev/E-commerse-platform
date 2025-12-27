@@ -12,6 +12,14 @@ namespace CatalogService.Domain.Aggregates
         public string? Color { get; private set; }
         public int StockQuantity { get; private set; }
 
+        // Initialize non-nullable properties with default! to satisfy CS8618 for EF Core or serialization
+        private ProductVariant()
+        {
+            Product = default!;
+            Sku = default!;
+            Price = default!;
+        }
+
         public ProductVariant(Product product, string sku, Money price, string? size, string? color, int stockQuantity)
         {
             Id = Guid.NewGuid();

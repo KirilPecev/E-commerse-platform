@@ -14,6 +14,14 @@ namespace CatalogService.Domain.Aggregates
         public DateTime CreatedAt { get; private set; }
         public List<ProductVariant> Variants { get; private set; } = new();
 
+        // Initialize non-nullable properties with default! to satisfy CS8618 for EF Core or serialization
+        private Product()
+        {
+            Name = default!;
+            Price = default!;
+            Category = default!;
+        }
+
         public Product(ProductName name, Money price, Category category, string? description = null)
         {
             Id = Guid.NewGuid();
