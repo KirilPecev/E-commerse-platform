@@ -2,6 +2,8 @@
 using CatalogService.Domain.Exceptions;
 using CatalogService.Domain.ValueObjects;
 
+using ECommercePlatform.Domain.Abstractions;
+
 namespace CatalogService.Domain.Aggregates
 {
     public class Product : AggregateRoot

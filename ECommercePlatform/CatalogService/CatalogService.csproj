@@ -36,4 +36,8 @@
     <ProjectReference Include="..\ECommercePlatform\ECommercePlatform.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Domain\Common\" />
+  </ItemGroup>
+
 </Project>

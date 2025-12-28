@@ -1,4 +1,4 @@
-﻿namespace CatalogService.Domain.Events
+﻿namespace ECommercePlatform.Domain.Events
 {
     public interface IDomainEvent
     {

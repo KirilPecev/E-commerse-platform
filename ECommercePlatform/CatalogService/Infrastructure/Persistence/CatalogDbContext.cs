@@ -1,7 +1,8 @@
 ﻿using CatalogService.Application;
 using CatalogService.Domain.Aggregates;
-using CatalogService.Domain.Events;
-using CatalogService.Domain.ValueObjects;
+
+using ECommercePlatform.Domain.Abstractions;
+using ECommercePlatform.Domain.Events;
 
 using Microsoft.EntityFrameworkCore;
 

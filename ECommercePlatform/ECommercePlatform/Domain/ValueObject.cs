@@ -1,4 +1,4 @@
-﻿namespace CatalogService.Domain.Common
+﻿namespace ECommercePlatform.Domain
 {
     public abstract class ValueObject
     {

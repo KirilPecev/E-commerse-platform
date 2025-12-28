@@ -1,7 +1,6 @@
-﻿using CatalogService.Domain.Common;
-using CatalogService.Domain.Events;
+﻿using ECommercePlatform.Domain.Events;
 
-namespace CatalogService.Domain.ValueObjects
+namespace ECommercePlatform.Domain.Abstractions
 {
     public abstract class AggregateRoot : Entity
     {

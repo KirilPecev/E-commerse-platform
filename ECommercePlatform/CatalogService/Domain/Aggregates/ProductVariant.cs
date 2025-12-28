@@ -1,5 +1,6 @@
-﻿using CatalogService.Domain.Common;
-using CatalogService.Domain.ValueObjects;
+﻿using CatalogService.Domain.ValueObjects;
+
+using ECommercePlatform.Domain;
 
 namespace CatalogService.Domain.Aggregates
 {

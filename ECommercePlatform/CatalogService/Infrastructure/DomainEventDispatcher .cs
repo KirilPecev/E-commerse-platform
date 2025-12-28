@@ -1,6 +1,7 @@
 ﻿
 using CatalogService.Application;
-using CatalogService.Domain.Events;
+
+using ECommercePlatform.Domain.Events;
 
 using MediatR;
 

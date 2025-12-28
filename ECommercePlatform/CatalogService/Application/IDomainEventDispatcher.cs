@@ -1,4 +1,4 @@
-﻿using CatalogService.Domain.Events;
+﻿using ECommercePlatform.Domain.Events;
 
 namespace CatalogService.Application
 {

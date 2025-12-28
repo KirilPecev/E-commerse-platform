@@ -1,4 +1,6 @@
 ﻿
+using ECommercePlatform.Domain.Events;
+
 using MediatR;
 
 namespace CatalogService.Domain.Events

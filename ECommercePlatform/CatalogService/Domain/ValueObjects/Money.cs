@@ -1,5 +1,6 @@
-﻿using CatalogService.Domain.Common;
-using CatalogService.Domain.Exceptions;
+﻿using CatalogService.Domain.Exceptions;
+
+using ECommercePlatform.Domain;
 
 namespace CatalogService.Domain.ValueObjects
 {
