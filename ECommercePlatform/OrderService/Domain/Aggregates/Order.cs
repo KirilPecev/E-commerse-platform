@@ -35,13 +35,10 @@ namespace OrderService.Domain.Aggregates
             this.AddDomainEvent(new OrderCreatedDomainEvent(Id));
         }
 
-        public void AddItem(Guid productVariantId, string name, decimal price, int quantity)
+        public void AddItem(Guid productVariantId, string name, Money price, int quantity)
         {
             if (Status != OrderStatus.Draft)
                 throw new OrderDomainException("Cannot modify a finalized order.");
-
-            if (quantity <= 0)
-                throw new OrderDomainException("Quantity must be greater than zero.");
 
             OrderItem? existingOrderItem = Items.FirstOrDefault(i => i.ProductVariantId == productVariantId);
             if (existingOrderItem != default)

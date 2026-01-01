@@ -2,6 +2,7 @@
 using MediatR;
 
 using OrderService.Domain.Aggregates;
+using OrderService.Domain.ValueObjects;
 using OrderService.Infrastructure.Persistence;
 
 namespace OrderService.Application.Orders.Commands
@@ -14,6 +15,8 @@ namespace OrderService.Application.Orders.Commands
             Order order = new Order(request.CustomerId);
 
             await ordersDbContext.Orders.AddAsync(order, cancellationToken);
+
+            order.AddItem(request.ProductVariantId, request.ProductName, new Money(request.Price, request.Currency), request.Quantity);
 
             await ordersDbContext.SaveChangesAsync(cancellationToken);
 

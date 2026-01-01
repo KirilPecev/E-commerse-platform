@@ -2,12 +2,12 @@
 
 namespace OrderService.Application.Orders.Commands
 {
-    public record CreateOrderCommand(
-        Guid CustomerId,
+    public record AddItemCommand(
+        Guid OrderId,
         Guid ProductVariantId,
         string ProductName,
         decimal Price,
         string Currency,
         int Quantity
-        ) : IRequest<Guid>;
+        ) : IRequest;
 }
