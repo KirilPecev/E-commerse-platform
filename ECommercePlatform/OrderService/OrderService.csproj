@@ -26,10 +26,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Application\Orders\Queries\" />
-  </ItemGroup>
-
-  <ItemGroup>
     <ProjectReference Include="..\ECommercePlatform\ECommercePlatform.csproj" />
   </ItemGroup>
 

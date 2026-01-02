@@ -106,6 +106,21 @@ namespace OrderService.Domain.Aggregates
             AddDomainEvent(new OrderShippedDomainEvent(Id, trackingNumber));
         }
 
+        public void RemoveItem(Guid itemId)
+        {
+            if (Status != OrderStatus.Draft)
+                throw new OrderDomainException("Cannot modify a finalized order.");
+
+            OrderItem? itemToRemove = Items.FirstOrDefault(i => i.Id == itemId);
+
+            if (itemToRemove is null)
+                throw new OrderDomainException("Item not found in the order.");
+
+            Items.Remove(itemToRemove);
+
+            RecalculateTotal();
+        }
+
         private void RecalculateTotal()
         {
             TotalPrice = this.Items.Sum(i => i.TotalPrice);
