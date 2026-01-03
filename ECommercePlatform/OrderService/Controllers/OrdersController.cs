@@ -143,5 +143,29 @@ namespace OrderService.Controllers
 
             return NoContent();
         }
+
+        [HttpGet("customer/{customerId:guid}")]
+        public async Task<IActionResult> GetAllOrdersForCustomer(Guid customerId)
+        {
+            GetOrdersByCustomerQuery query = new GetOrdersByCustomerQuery(customerId);
+
+            List<OrderDto> orders = await mediator.Send(query);
+
+            List<OrderResponse> orderResponses = orders.Select(order => new OrderResponse(
+                order.Id,
+                order.CustomerId,
+                order.CreatedAt,
+                order.Status,
+                order.TotalPrice,
+                order.ShippingAddress,
+                order.CancellationReason,
+                order.ShippedAt,
+                order.TrackingNumber,
+                order.Items.Select(i => new OrderItemResponse(i.Id, i.ProductVariantId, i.ProductName, i.UnitPrice, i.Currency, i.Quantity, i.TotalPrice)).ToList()
+            ))
+                .ToList();
+
+            return Ok(orderResponses);
+        }
     }
 }
