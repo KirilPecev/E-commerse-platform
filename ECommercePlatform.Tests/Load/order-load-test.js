@@ -24,22 +24,22 @@ export const options = {
 };
 
 function makeOrderPayload() {
-    const productId = __ENV.TEST_PRODUCT_ID || null;
 
     return JSON.stringify({
-        customerId: __ENV.TEST_CUSTOMER_ID || '11111111-1111-1111-1111-111111111111',
-        items: [
-            {
-                productId: productId,
-                quantity: 1,
-            },
-        ],
+        customerId: __ENV.TEST_CUSTOMER_ID || '01517BA1-4550-43B3-BDEA-08DEB8B30E07',
+        productId: "4a5eeb96-b40b-4aff-b003-601297565fac",
+        quantity: 1,
+        productVariantId: "4c5782c1-db34-43be-8500-3986496352e7",
+        productName: "Dell",
+        price: 1800,
+        currency: "EUR",
+        quantity: 1
     });
 }
 
 export default function () {
     // attempt to get a product id from products endpoint if not provided
-    let productId = __ENV.TEST_PRODUCT_ID;
+    let productId = "4a5eeb96-b40b-4aff-b003-601297565fac";
     if (!productId) {
         try {
             const prodRes = http.get(`${PRODUCT_SERVICE_URL}${PRODUCTS_PATH}`);
@@ -55,30 +55,66 @@ export default function () {
     }
 
     // build payload with chosen product id
-    const payloadObj = {
-        customerId: __ENV.TEST_CUSTOMER_ID || '11111111-1111-1111-1111-111111111111',
-        items: [ { productId: productId || __ENV.TEST_PRODUCT_ID || '22222222-2222-2222-2222-222222222222', quantity: 1 } ]
-    };
+    const payloadObj = makeOrderPayload();
 
     const params = { headers: { 'Content-Type': 'application/json' } };
 
     // optionally login to identity service to obtain bearer token
-    if (__ENV.TEST_USER_EMAIL && __ENV.TEST_USER_PASSWORD) {
-        try {
-            const loginRes = http.post(`${IDENTITY_BASE_URL}${IDENTITY_LOGIN}`, JSON.stringify({ Email: __ENV.TEST_USER_EMAIL, Password: __ENV.TEST_USER_PASSWORD }), { headers: { 'Content-Type': 'application/json' } });
-            if (loginRes && loginRes.status === 200) {
-                const auth = JSON.parse(loginRes.body || '{}');
-                if (auth && auth.token) {
-                    params.headers.Authorization = `Bearer ${auth.token}`;
-                }
+    try {
+        const loginRes = http.post(`${IDENTITY_BASE_URL}${IDENTITY_LOGIN}`, JSON.stringify({ Email: 'loadtest+95229640@example.com', Password: 'StrongPass123!' }), { headers: { 'Content-Type': 'application/json' } });
+        if (loginRes && loginRes.status === 200) {
+            const auth = JSON.parse(loginRes.body || '{}');
+            if (auth && auth.token) {
+                params.headers.Authorization = `Bearer ${auth.token}`;
+                console.log(`[k6] Obtained auth token, will include Authorization header`);
+            } else {
+                console.error(`[k6] Login succeeded but no token returned: ${loginRes.body}`);
             }
-        } catch (e) {}
+        } else {
+            console.error(`[k6] Login failed: ${loginRes ? loginRes.status : 'no response'}`);
+        }
+    } catch (e) {
+        console.error(`[k6] Login exception: ${e.message}`);
     }
 
     const url = `${BASE_URL}${ORDERS_PATH}`;
-    const response = http.post(url, JSON.stringify(payloadObj), params);
+    const response = http.post(url, payloadObj, params);
 
-    check(response, { 'status is 2xx': (r) => r.status >= 200 && r.status < 300 });
+    const createdOk = check(response, { 'status is 2xx': (r) => r.status >= 200 && r.status < 300 });
+
+    function logRes(method, url, res) {
+        if (!res) {
+            console.error(`[k6] ${method} ${url} - no response`);
+            return;
+        }
+
+        const ok = res.status >= 200 && res.status < 300;
+        const status = res.status;
+        const timings = res.timings ? res.timings.duration : 'n/a';
+        const headers = res.headers ? JSON.stringify(res.headers) : 'n/a';
+        let bodyPreview = '';
+        try {
+            if (typeof res.body === 'string') {
+                bodyPreview = res.body.substring(0, 2000);
+            } else {
+                bodyPreview = JSON.stringify(res.body).substring(0, 2000);
+            }
+        } catch (e) {
+            bodyPreview = `unable to read body: ${e.message}`;
+        }
+
+        if (!ok) {
+            console.error(`[k6] Request FAILED: ${method} ${url}`);
+            console.error(`[k6] Status: ${status}, Time: ${timings} ms`);
+            console.error(`[k6] Headers: ${headers}`);
+            console.error(`[k6] Body (truncated): ${bodyPreview}`);
+        } else {
+            console.log(`[k6] Request OK: ${method} ${url} - ${status} - ${timings} ms`);
+        }
+    }
+
+    // log the create response
+    logRes('POST', url, response);
 
     // if created, optionally GET the new order to validate
     try {
@@ -86,11 +122,19 @@ export default function () {
             const created = JSON.parse(response.body || '{}');
             const orderId = created.id || created.orderId || created.orderID;
             if (orderId) {
-                const getRes = http.get(`${BASE_URL}${ORDERS_PATH}/${orderId}`, params);
-                check(getRes, { 'get order 200': (r) => r.status === 200 });
+                const getUrl = `${BASE_URL}${ORDERS_PATH}/${orderId}`;
+                const getRes = http.get(getUrl, params);
+                const getOk = check(getRes, { 'get order 200': (r) => r.status === 200 });
+                logRes('GET', getUrl, getRes);
+                if (!getOk) {
+                    // additional context when GET fails
+                    console.error(`[k6] Failed to validate created order ${orderId}`);
+                }
             }
         }
-    } catch (e) {}
+    } catch (e) {
+        console.error(`[k6] Exception validating created order: ${e.message}`);
+    }
 
     sleep(1);
 }

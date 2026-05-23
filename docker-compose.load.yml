@@ -11,7 +11,7 @@ services:
       - INVENTORY_SERVICE_URL=${INVENTORY_SERVICE_URL:-http://host.docker.internal:5003}
       - PAYMENT_SERVICE_URL=${PAYMENT_SERVICE_URL:-http://host.docker.internal:5005}
       - IDENTITY_SERVICE_URL=${IDENTITY_SERVICE_URL:-http://host.docker.internal:5001}
-      - K6_VUS=${K6_VUS:-50}
+      - K6_VUS=${K6_VUS:-100}
       - K6_DURATION=${K6_DURATION:-1m}
       - K6_SCRIPT=${K6_SCRIPT:-product-load-test.js}
-    command: run --vus ${K6_VUS:-50} --duration ${K6_DURATION:-1m} ${K6_SCRIPT:-product-load-test.js}
+    command: run --vus ${K6_VUS:-100} --duration ${K6_DURATION:-1m} ${K6_SCRIPT:-product-load-test.js}
