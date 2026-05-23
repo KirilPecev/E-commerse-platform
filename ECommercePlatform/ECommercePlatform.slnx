@@ -1,18 +1,24 @@
 <Solution>
   <Folder Name="/Tests/">
-    <Project Path="../ECommercePlatform.Tests/Architecture.Tests/Architecture.Tests.csproj" />
-    <Project Path="../ECommercePlatform.Tests/CatalogService.Tests/CatalogService.Tests.csproj" />
-    <Project Path="../ECommercePlatform.Tests/ECommercePlatform.Tests/ECommercePlatform.Tests.csproj" />
-    <Project Path="../ECommercePlatform.Tests/IdentityService.Tests/IdentityService.Tests.csproj" />
-    <Project Path="../ECommercePlatform.Tests/InventoryService.Tests/InventoryService.Tests.csproj" />
-    <Project Path="../ECommercePlatform.Tests/OrderService.Tests/OrderService.Tests.csproj" />
-    <Project Path="../ECommercePlatform.Tests/PaymentService.Tests/PaymentService.Tests.csproj" />
+    <File Path="../ECommercePlatform.Tests/Load/identity-load-test.js" />
+    <File Path="../ECommercePlatform.Tests/Load/inventory-load-test.js" />
+    <File Path="../ECommercePlatform.Tests/Load/order-load-test.js" />
+    <File Path="../ECommercePlatform.Tests/Load/payment-load-test.js" />
+    <File Path="../ECommercePlatform.Tests/Load/product-load-test.js" />
+    <File Path="../ECommercePlatform.Tests/Load/README.md" />
+    <Project Path="../../../../../../../../dev/E-commerce-platform/ECommercePlatform.Tests/Architecture.Tests/Architecture.Tests.csproj" />
+    <Project Path="../../../../../../../../dev/E-commerce-platform/ECommercePlatform.Tests/CatalogService.Tests/CatalogService.Tests.csproj" />
+    <Project Path="../../../../../../../../dev/E-commerce-platform/ECommercePlatform.Tests/ECommercePlatform.Tests/ECommercePlatform.Tests.csproj" />
+    <Project Path="../../../../../../../../dev/E-commerce-platform/ECommercePlatform.Tests/IdentityService.Tests/IdentityService.Tests.csproj" />
+    <Project Path="../../../../../../../../dev/E-commerce-platform/ECommercePlatform.Tests/InventoryService.Tests/InventoryService.Tests.csproj" />
+    <Project Path="../../../../../../../../dev/E-commerce-platform/ECommercePlatform.Tests/OrderService.Tests/OrderService.Tests.csproj" />
+    <Project Path="../../../../../../../../dev/E-commerce-platform/ECommercePlatform.Tests/PaymentService.Tests/PaymentService.Tests.csproj" />
   </Folder>
-  <Project Path="ApiGateway/ApiGateway.csproj" Id="33032d17-ec64-4d2a-adbc-0a360a97665f" />
-  <Project Path="CatalogService/CatalogService.csproj" />
-  <Project Path="ECommercePlatform/ECommercePlatform.csproj" />
-  <Project Path="IdentityService/IdentityService.csproj" />
-  <Project Path="InventoryService/InventoryService.csproj" />
-  <Project Path="OrderService/OrderService.csproj" />
-  <Project Path="PaymentService/PaymentService.csproj" />
+  <Project Path="../../../../../../../../dev/E-commerce-platform/ECommercePlatform/ApiGateway/ApiGateway.csproj" Id="33032d17-ec64-4d2a-adbc-0a360a97665f" />
+  <Project Path="../../../../../../../../dev/E-commerce-platform/ECommercePlatform/CatalogService/CatalogService.csproj" />
+  <Project Path="../../../../../../../../dev/E-commerce-platform/ECommercePlatform/ECommercePlatform/ECommercePlatform.csproj" />
+  <Project Path="../../../../../../../../dev/E-commerce-platform/ECommercePlatform/IdentityService/IdentityService.csproj" />
+  <Project Path="../../../../../../../../dev/E-commerce-platform/ECommercePlatform/InventoryService/InventoryService.csproj" />
+  <Project Path="../../../../../../../../dev/E-commerce-platform/ECommercePlatform/OrderService/OrderService.csproj" />
+  <Project Path="../../../../../../../../dev/E-commerce-platform/ECommercePlatform/PaymentService/PaymentService.csproj" />
 </Solution>

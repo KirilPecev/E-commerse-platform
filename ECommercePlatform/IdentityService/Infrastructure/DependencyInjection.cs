@@ -46,6 +46,36 @@ namespace IdentityService.Infrastructure
         {
             using IServiceScope serviceScope = app.ApplicationServices.CreateScope();
             IServiceProvider serviceProvider = serviceScope.ServiceProvider;
+            var logger = serviceProvider.GetRequiredService<ILogger<Program>>();
+
+            // DbContext may not be registered in the "Testing" environment, skip if not available
+            var dbContext = serviceProvider.GetService<IdentityDbContext>();
+            if (dbContext != null)
+            {
+                const int maxAttempts = 10;
+                for (int attempt = 1; attempt <= maxAttempts; attempt++)
+                {
+                    try
+                    {
+                        await dbContext.Database.MigrateAsync();
+                        logger?.LogInformation("Applied Identity DB migrations successfully.");
+                        break;
+                    }
+                    catch (Exception ex)
+                    {
+                        logger?.LogWarning(ex, "Attempt {Attempt} to apply Identity DB migrations failed.", attempt);
+
+                        if (attempt == maxAttempts)
+                        {
+                            logger?.LogError(ex, "Exceeded retry attempts while applying Identity DB migrations.");
+                            throw;
+                        }
+
+                        int delaySeconds = Math.Min(30, attempt * 2);
+                        await Task.Delay(TimeSpan.FromSeconds(delaySeconds));
+                    }
+                }
+            }
 
             RoleManager<Role> roleManager = serviceProvider.GetRequiredService<RoleManager<Role>>();
 

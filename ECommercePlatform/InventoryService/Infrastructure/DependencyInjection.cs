@@ -10,6 +10,7 @@ using InventoryService.Infrastructure.Persistence;
 using MassTransit;
 
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 
 namespace InventoryService.Infrastructure
 {
@@ -72,6 +73,43 @@ namespace InventoryService.Infrastructure
             services.AddTokenAuthentication(configuration);
 
             return services;
+        }
+
+        public static async Task<IApplicationBuilder> Initialize(this IApplicationBuilder app)
+        {
+            using IServiceScope serviceScope = app.ApplicationServices.CreateScope();
+            IServiceProvider serviceProvider = serviceScope.ServiceProvider;
+
+            var logger = serviceProvider.GetService<ILogger<Program>>();
+
+            var dbContext = serviceProvider.GetService<InventoryDbContext>();
+            if (dbContext != null)
+            {
+                const int maxAttempts = 10;
+                for (int attempt = 1; attempt <= maxAttempts; attempt++)
+                {
+                    try
+                    {
+                        await dbContext.Database.MigrateAsync();
+                        logger?.LogInformation("Applied Inventory DB migrations successfully.");
+                        break;
+                    }
+                    catch (Exception ex)
+                    {
+                        logger?.LogWarning(ex, "Attempt {Attempt} to apply Inventory DB migrations failed.", attempt);
+                        if (attempt == maxAttempts)
+                        {
+                            logger?.LogError(ex, "Exceeded retry attempts while applying Inventory DB migrations.");
+                            throw;
+                        }
+
+                        int delaySeconds = Math.Min(30, attempt * 2);
+                        await Task.Delay(TimeSpan.FromSeconds(delaySeconds));
+                    }
+                }
+            }
+
+            return app;
         }
     }
 }

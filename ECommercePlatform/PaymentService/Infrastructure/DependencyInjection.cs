@@ -5,6 +5,7 @@ using ECommercePlatform.Identity;
 using MassTransit;
 
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 
 using PaymentService.Application.Interfaces;
 using PaymentService.Infrastructure.Gateways;
@@ -75,6 +76,43 @@ namespace PaymentService.Infrastructure
             services.AddTransient<IPaymentGateway, CardPaymentGateway>();
 
             return services;
+        }
+
+        public static async Task<IApplicationBuilder> Initialize(this IApplicationBuilder app)
+        {
+            using IServiceScope serviceScope = app.ApplicationServices.CreateScope();
+            IServiceProvider serviceProvider = serviceScope.ServiceProvider;
+
+            var logger = serviceProvider.GetService<ILogger<Program>>();
+
+            var dbContext = serviceProvider.GetService<PaymentDbContext>();
+            if (dbContext != null)
+            {
+                const int maxAttempts = 10;
+                for (int attempt = 1; attempt <= maxAttempts; attempt++)
+                {
+                    try
+                    {
+                        await dbContext.Database.MigrateAsync();
+                        logger?.LogInformation("Applied Payment DB migrations successfully.");
+                        break;
+                    }
+                    catch (Exception ex)
+                    {
+                        logger?.LogWarning(ex, "Attempt {Attempt} to apply Payment DB migrations failed.", attempt);
+                        if (attempt == maxAttempts)
+                        {
+                            logger?.LogError(ex, "Exceeded retry attempts while applying Payment DB migrations.");
+                            throw;
+                        }
+
+                        int delaySeconds = Math.Min(30, attempt * 2);
+                        await Task.Delay(TimeSpan.FromSeconds(delaySeconds));
+                    }
+                }
+            }
+
+            return app;
         }
     }
 }

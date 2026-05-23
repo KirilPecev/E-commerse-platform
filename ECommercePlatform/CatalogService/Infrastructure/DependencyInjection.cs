@@ -94,9 +94,39 @@ namespace CatalogService.Infrastructure
             using IServiceScope serviceScope = app.ApplicationServices.CreateScope();
             IServiceProvider serviceProvider = serviceScope.ServiceProvider;
 
-            CatalogDbContext dbContext = serviceProvider.GetRequiredService<CatalogDbContext>();
+            var logger = serviceProvider.GetService<ILogger<Program>>();
 
-            await CategoriesSeeder.SeedCategoriesAsync(dbContext);
+            // DbContext may not be registered in the "Testing" environment, skip if not available
+            var dbContext = serviceProvider.GetService<CatalogDbContext>();
+            if (dbContext != null)
+            {
+                const int maxAttempts = 10;
+                for (int attempt = 1; attempt <= maxAttempts; attempt++)
+                {
+                    try
+                    {
+                        await dbContext.Database.MigrateAsync();
+                        logger?.LogInformation("Applied Catalog DB migrations successfully.");
+                        break;
+                    }
+                    catch (Exception ex)
+                    {
+                        logger?.LogWarning(ex, "Attempt {Attempt} to apply Catalog DB migrations failed.", attempt);
+
+                        if (attempt == maxAttempts)
+                        {
+                            logger?.LogError(ex, "Exceeded retry attempts while applying Catalog DB migrations.");
+                            throw;
+                        }
+
+                        // exponential backoff with a cap
+                        int delaySeconds = Math.Min(30, attempt * 2);
+                        await Task.Delay(TimeSpan.FromSeconds(delaySeconds));
+                    }
+                }
+
+                await CategoriesSeeder.SeedCategoriesAsync(dbContext);
+            }
 
             return app;
         }

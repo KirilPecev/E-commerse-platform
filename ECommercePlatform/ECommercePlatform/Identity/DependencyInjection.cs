@@ -28,7 +28,7 @@ namespace ECommercePlatform.Identity
                 .AddJwtBearer(options =>
                 {
                     var appSettingsSection = configuration.GetSection(nameof(ApplicationSettings));
-                    
+
                     options.RequireHttpsMetadata = false;
                     options.SaveToken = true;
 
