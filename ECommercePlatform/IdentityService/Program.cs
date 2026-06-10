@@ -36,6 +36,6 @@ app.UseAuthorization();
 
 app.MapControllers();
 
-await app.Initialize();
+await app.Initialize(builder.Environment);
 
 app.Run();

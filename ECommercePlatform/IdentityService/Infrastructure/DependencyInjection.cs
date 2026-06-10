@@ -42,7 +42,7 @@ namespace IdentityService.Infrastructure
             return services;
         }
 
-        public static async Task<IApplicationBuilder> Initialize(this IApplicationBuilder app)
+        public static async Task<IApplicationBuilder> Initialize(this IApplicationBuilder app, IWebHostEnvironment environment)
         {
             using IServiceScope serviceScope = app.ApplicationServices.CreateScope();
             IServiceProvider serviceProvider = serviceScope.ServiceProvider;
@@ -50,7 +50,7 @@ namespace IdentityService.Infrastructure
 
             // DbContext may not be registered in the "Testing" environment, skip if not available
             var dbContext = serviceProvider.GetService<IdentityDbContext>();
-            if (dbContext != null)
+            if (dbContext != null && environment.EnvironmentName != "Testing")
             {
                 const int maxAttempts = 10;
                 for (int attempt = 1; attempt <= maxAttempts; attempt++)

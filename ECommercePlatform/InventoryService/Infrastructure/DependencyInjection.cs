@@ -75,7 +75,7 @@ namespace InventoryService.Infrastructure
             return services;
         }
 
-        public static async Task<IApplicationBuilder> Initialize(this IApplicationBuilder app)
+        public static async Task<IApplicationBuilder> Initialize(this IApplicationBuilder app, IWebHostEnvironment environment)
         {
             using IServiceScope serviceScope = app.ApplicationServices.CreateScope();
             IServiceProvider serviceProvider = serviceScope.ServiceProvider;
@@ -83,7 +83,7 @@ namespace InventoryService.Infrastructure
             var logger = serviceProvider.GetService<ILogger<Program>>();
 
             var dbContext = serviceProvider.GetService<InventoryDbContext>();
-            if (dbContext != null)
+            if (dbContext != null && environment.EnvironmentName != "Testing")
             {
                 const int maxAttempts = 10;
                 for (int attempt = 1; attempt <= maxAttempts; attempt++)
