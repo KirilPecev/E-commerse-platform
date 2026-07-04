@@ -5,7 +5,7 @@
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [],
       "UpstreamPathTemplate": "/identity/{everything}",
-      "UpstreamHttpMethod": [ "GET", "POST" ],
+      "UpstreamHttpMethod": [ "GET", "POST", "PUT" ],
       "RateLimitOptions": {
         "ClientWhitelist": [],
         "EnableRateLimiting": true,
@@ -111,10 +111,10 @@
       }
     },
     {
-      "DownstreamPathTemplate": "/api/payments/{everything}",
+      "DownstreamPathTemplate": "/api/payment/{everything}",
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [],
-      "UpstreamPathTemplate": "/payments/{everything}",
+      "UpstreamPathTemplate": "/payment/{everything}",
       "UpstreamHttpMethod": [ "POST" ],
       "AuthenticationOptions": {
         "AuthenticationProviderKey": "Bearer"
