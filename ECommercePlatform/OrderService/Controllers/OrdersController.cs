@@ -64,7 +64,7 @@ namespace OrderService.Controllers
                 order.Items.Select(i => new OrderItemResponse(i.Id, i.ProductVariantId, i.ProductName, i.UnitPrice, i.Currency, i.Quantity, i.TotalPrice)).ToList()
             );
 
-            return Ok(order);
+            return Ok(orderResponse);
         }
 
         [Authorize(Roles = $"{Roles.Admin},{Roles.Customer}")]

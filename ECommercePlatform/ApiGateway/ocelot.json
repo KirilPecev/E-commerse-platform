@@ -115,7 +115,7 @@
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [],
       "UpstreamPathTemplate": "/payment/{everything}",
-      "UpstreamHttpMethod": [ "POST" ],
+      "UpstreamHttpMethod": [ "GET", "POST" ],
       "AuthenticationOptions": {
         "AuthenticationProviderKey": "Bearer"
       },
